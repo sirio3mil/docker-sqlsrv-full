@@ -1,27 +1,24 @@
-# mssql-agent-fts-ha-tools
-# Maintainers: Microsoft Corporation (twright-msft on GitHub)
-# GitRepo: https://github.com/Microsoft/mssql-docker
+# mssql-server-rhel
+# Maintainers: Travis Wright (twright-msft on GitHub)
+# GitRepo: https://github.com/twright-msft/mssql-server-rhel
 
-# Base OS layer: Latest Ubuntu LTS
-FROM ubuntu:16.04
+# Base OS layer: latest CentOS 7
+FROM centos:7
 
-#Install curl since it is needed to get repo config
-# Get official Microsoft repository configuration
-RUN export DEBIAN_FRONTEND=noninteractive && \
-    apt-get update && \
-    apt-get install -y curl && \
-    apt-get install apt-transport-https && \
-    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
-    curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list | tee /etc/apt/sources.list.d/mssql-server.list && \
-    apt-get update
+# Install latest mssql-server package
+RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-preview.repo && \
+    curl -o /etc/yum.repos.d/mssql-tools.repo https://packages.microsoft.com/config/rhel/7/prod.repo && \
+    ACCEPT_EULA=Y yum install -y mssql-server mssql-server-fts mssql-tools unixODBC-devel && \
+    yum clean all
 
-# Install SQL Server which a prerequisite for the optional packages below.
-RUN apt-get install -y mssql-server
+ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
+RUN mkdir -p /var/opt/mssql/data && \
+    chmod -R g=u /var/opt/mssql /etc/passwd
 
-# Install optional packages.  Comment out the ones you don't need
-#RUN apt-get install -y mssql-server-agent - The agent is included in the mssql-server package starting from 2017 CU4 and beyond.
-RUN apt-get install -y mssql-server-ha
-RUN apt-get install -y mssql-server-fts
+# Default SQL Server TCP/Port
+EXPOSE 1433
+
+VOLUME /var/opt/mssql/data
 
 # Run SQL Server process
-CMD /opt/mssql/bin/sqlservr
+CMD sqlservr
