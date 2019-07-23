@@ -11,7 +11,7 @@ RUN curl https://packages.microsoft.com/config/rhel/7/mssql-server-preview.repo 
     ACCEPT_EULA=Y yum install -y mssql-server mssql-tools mssql-server-fts && \
     yum clean all
     
-RUN MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='$password' /opt/mssql/bin/mssql-conf -n setup
+RUN MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='2_;bT=%!ca' /opt/mssql/bin/mssql-conf -n setup
 RUN /opt/mssql/bin/mssql-conf set sqlagent.enabled true
 
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
