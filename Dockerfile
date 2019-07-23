@@ -5,27 +5,14 @@
 # Base OS layer: latest CentOS 7
 FROM centos:7
 
-### Atomic/OpenShift Labels - https://github.com/projectatomic/ContainerApplicationGenericLabels
-LABEL name="microsoft/mssql-server-linux" \
-      vendor="Microsoft" \
-      version="14.0" \
-      release="1" \
-      summary="MS SQL Server Developer Edition" \
-      description="MS SQL Server is ....." \
-### Required labels above - recommended below
-      url="https://www.microsoft.com/en-us/sql-server/" \
-      run='docker run --name ${NAME} \
-        -e ACCEPT_EULA=Y -e SA_PASSWORD=yourStrong@Password \
-        -p 1433:1433 \
-        -d  ${IMAGE}' \
-      io.k8s.description="MS SQL Server is ....." \
-      io.k8s.display-name="MS SQL Server Developer Edition"
-
 # Install latest mssql-server package
-RUN curl https://packages.microsoft.com/config/rhel/7/mssql-server-2017.repo > /etc/yum.repos.d/mssql-server-2017.repo && \
-    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/msprod.repo && \
+RUN curl https://packages.microsoft.com/config/rhel/7/mssql-server-preview.repo > /etc/yum.repos.d/mssql-server.repo && \
+    curl https://packages.microsoft.com/config/rhel/7/prod.repo > /etc/yum.repos.d/mssql-tools.repo && \
     ACCEPT_EULA=Y yum install -y mssql-server mssql-tools mssql-server-fts && \
     yum clean all
+    
+RUN MSSQL_PID=Developer ACCEPT_EULA=Y MSSQL_SA_PASSWORD='$password' /opt/mssql/bin/mssql-conf -n setup
+RUN /opt/mssql/bin/mssql-conf set sqlagent.enabled true
 
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
 
