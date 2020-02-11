@@ -7,7 +7,7 @@ FROM centos:8
 
 # Install latest mssql-server package
 RUN dnf -y install dnf-plugins-core
-RUN dnf config-manager --add-repo https://packages.microsoft.com/config/rhel/8/insiders-fast.repo
+RUN dnf config-manager --add-repo https://packages.microsoft.com/config/rhel/8/mssql-server-2019.repo
 RUN dnf config-manager --add-repo https://packages.microsoft.com/config/rhel/8/prod.repo
 ENV ACCEPT_EULA=Y 
 RUN dnf -y install mssql-server mssql-server-fts mssql-tools unixODBC-devel
