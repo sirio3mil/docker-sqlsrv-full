@@ -2,12 +2,12 @@
 # Maintainers: Travis Wright (twright-msft on GitHub)
 # GitRepo: https://github.com/twright-msft/mssql-server-rhel
 
-# Base OS layer: latest CentOS 7
-FROM centos:7
+# Base OS layer: latest CentOS 8
+FROM centos:8
 
 # Install latest mssql-server package
-RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/7/mssql-server-preview.repo && \
-    curl -o /etc/yum.repos.d/mssql-tools.repo https://packages.microsoft.com/config/rhel/7/prod.repo && \
+RUN curl -o /etc/yum.repos.d/mssql-server.repo https://packages.microsoft.com/config/rhel/8/mssql-server-preview.repo && \
+    curl -o /etc/yum.repos.d/mssql-tools.repo https://packages.microsoft.com/config/rhel/8/prod.repo && \
     ACCEPT_EULA=Y yum install -y mssql-server mssql-server-fts mssql-tools unixODBC-devel && \
     yum clean all
 
