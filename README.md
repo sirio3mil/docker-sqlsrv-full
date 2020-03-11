@@ -1,4 +1,4 @@
-# docker-sqlsrv-full
+# SQL Server container in CentOS
 Dockerfile for SQL Server container in CentOS with FTS and agent enable
 
 Example docker compose file
